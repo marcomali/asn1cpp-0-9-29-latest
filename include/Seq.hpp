@@ -8,8 +8,8 @@
 
 #include "asn_application.h"
 
-#include "asn1cpp/Utils.hpp"
-#include "asn1cpp/Encoding.hpp"
+#include "Utils.hpp"
+#include "Encoding.hpp"
 
 namespace asn1cpp {
     /**
@@ -232,7 +232,7 @@ namespace asn1cpp {
     template <typename T>
     Seq<T>::~Seq() {
         if (seq_)
-            def_->free_struct(def_, seq_, 0);
+            def_->op->free_struct(def_, seq_, ASFM_FREE_EVERYTHING);
     }
 
     template <typename T>

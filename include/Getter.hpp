@@ -9,8 +9,8 @@
 #include "INTEGER.h"
 #include "OCTET_STRING.h"
 
-#include "asn1cpp/Seq.hpp"
-#include "asn1cpp/View.hpp"
+#include "Seq.hpp"
+#include "View.hpp"
 
 namespace asn1cpp {
     namespace Impl {

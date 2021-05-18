@@ -5,8 +5,8 @@
 
 #include "asn_application.h"
 
-#include "asn1cpp/Utils.hpp"
-#include "asn1cpp/Seq.hpp"
+#include "Utils.hpp"
+#include "Seq.hpp"
 
 namespace asn1cpp {
     namespace Impl {

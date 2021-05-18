@@ -1,7 +1,7 @@
 #ifndef ASN1CPP_SEQUENCEOF_HEADER_FILE
 #define ASN1CPP_SEQUENCEOF_HEADER_FILE
 
-#include "asn1cpp/SetOf.hpp"
+#include "SetOf.hpp"
 
 namespace asn1cpp {
     namespace sequenceof {
@@ -48,7 +48,7 @@ namespace asn1cpp {
             auto p = field.list.array[id];
             // Note that here we use the sequence del, not the set
             asn_sequence_del(&field, id, 0);
-            def->free_struct(def, p, 0);
+            def->op->free_struct(def, p, ASFM_FREE_EVERYTHING);
             return true;
         }
 

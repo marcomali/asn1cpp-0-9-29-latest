@@ -5,7 +5,7 @@
 
 #include "asn_application.h"
 
-#include "asn1cpp/Utils.hpp"
+#include "Utils.hpp"
 
 namespace asn1cpp {
     template <typename T>
@@ -16,7 +16,13 @@ namespace asn1cpp {
             std::string * str = static_cast<std::string*>(appKey);
             if (!str)
                 return -1;
+
+            fprintf(stdout,"[TBR] (size: %lu):\n",str->size());
+            
             str->append((const char*)buffer, size);
+
+            fprintf(stdout,"[TBR] (size: %lu):\n",str->size());
+
             return 0;
         }
     }
@@ -44,7 +50,7 @@ namespace asn1cpp {
             const auto dr = ber_decode(0, def, (void**)&m, buffer.data(), buffer.size());
 
             if (dr.code != RC_OK) {
-                def->free_struct(def, m, 0);
+                def->op->free_struct(def, m , ASFM_FREE_EVERYTHING);
                 return Seq<T>();
             }
 
@@ -79,7 +85,7 @@ namespace asn1cpp {
         std::string encode(const T & m) {
             if (!m) return {};
             std::string retval;
-            const auto er = uper_encode(m.getTypeDescriptor(), (void*)(&*m), Impl::fill, &retval);
+            const auto er = uper_encode(m.getTypeDescriptor(), nullptr, (void*)(&*m), Impl::fill, &retval);
             return er.encoded < 0 ? std::string() : retval;
         }
 
@@ -91,7 +97,7 @@ namespace asn1cpp {
             const auto dr = uper_decode_complete(0, def, (void**)&m, buffer.data(), buffer.size());
 
             if (dr.code != RC_OK) {
-                def->free_struct(def, m, 0);
+                def->op->free_struct(def, m, ASFM_FREE_EVERYTHING);
                 return Seq<T>();
             }
 

@@ -7,8 +7,8 @@
 #include "INTEGER.h"
 #include "OCTET_STRING.h"
 
-#include "asn1cpp/Utils.hpp"
-#include "asn1cpp/View.hpp"
+#include "Utils.hpp"
+#include "View.hpp"
 
 namespace asn1cpp {
     namespace Impl {
@@ -86,7 +86,7 @@ namespace asn1cpp {
     template <typename F>
     bool clearerField(F *& field, asn_TYPE_descriptor_t * def) {
         if (field) {
-            def->free_struct(def, field, 0);
+            def->op->free_struct(def, field, ASFM_FREE_EVERYTHING);
             field = nullptr;
         }
         return true;

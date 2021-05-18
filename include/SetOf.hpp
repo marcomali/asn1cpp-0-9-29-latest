@@ -1,10 +1,10 @@
 #ifndef ASN1CPP_SETOF_HEADER_FILE
 #define ASN1CPP_SETOF_HEADER_FILE
 
-#include "asn1cpp/Setter.hpp"
-#include "asn1cpp/Getter.hpp"
-#include "asn1cpp/Seq.hpp"
-#include "asn1cpp/View.hpp"
+#include "Setter.hpp"
+#include "Getter.hpp"
+#include "Seq.hpp"
+#include "View.hpp"
 
 namespace asn1cpp {
     namespace setof {
@@ -168,7 +168,7 @@ namespace asn1cpp {
 
             auto p = field.list.array[id];
             asn_set_del(&field, id, 0);
-            def->free_struct(def, p, 0);
+            def->op->free_struct(def, p, ASFM_FREE_EVERYTHING);
             return true;
         }
 
@@ -181,7 +181,7 @@ namespace asn1cpp {
         template <typename T>
         void clearerField(T & field, asn_TYPE_descriptor_t * def) {
             for (int i = 0; i < getSize(field); ++i)
-                def->free_struct(def, field.list.array[i], 0);
+                def->op->free_struct(def, field.list.array[i], ASFM_FREE_EVERYTHING);
             field.list.count = 0;
         }
 
@@ -189,7 +189,7 @@ namespace asn1cpp {
         void clearerField(T *& field, asn_TYPE_descriptor_t * def) {
             if (!field) return;
             for (int i = 0; i < getSize(field); ++i)
-                def->free_struct(def, field->list.array[i], 0);
+                def->op->free_struct(def, field->list.array[i], ASFM_FREE_EVERYTHING);
 
             asn_set_empty(field);
             free(field);
