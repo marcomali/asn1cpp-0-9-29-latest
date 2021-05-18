@@ -16,12 +16,8 @@ namespace asn1cpp {
             std::string * str = static_cast<std::string*>(appKey);
             if (!str)
                 return -1;
-
-            fprintf(stdout,"[TBR] (size: %lu):\n",str->size());
             
             str->append((const char*)buffer, size);
-
-            fprintf(stdout,"[TBR] (size: %lu):\n",str->size());
 
             return 0;
         }
