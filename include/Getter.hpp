@@ -77,6 +77,14 @@ namespace asn1cpp {
             }
         };
 
+        template <typename R>
+        struct Getter<R, unsigned long, typename std::enable_if<std::is_arithmetic<R>::value>::type> {
+            R operator()(const unsigned long * field, bool & ok) {
+                ok = true;
+                return static_cast<R>(*field);
+            }
+        };
+
         template <>
         struct Getter<std::string, OCTET_STRING_t> {
             std::string operator()(const OCTET_STRING_t * field, bool & ok) {
