@@ -22,12 +22,13 @@
 #define ASN1CPP_BITSTRING_HEADER_FILE
 
 #include "BIT_STRING.h"
+#include <cstring>
 
 namespace asn1cpp {
     namespace bitstring {
         // This static inline function allocates, only if needeed, more space to the asn1c BIT_STRING buffer (buf)
         static inline bool bitstringAlloc(int requiredBytes, BIT_STRING_t & field) {
-            if(requiredBytes > field.size) {
+            if(static_cast<size_t>(requiredBytes) > field.size) {
                 uint8_t * realloc_ptr;
                 realloc_ptr = static_cast<uint8_t *>(realloc((void *)field.buf,requiredBytes));
                 if(!realloc_ptr) return false;
