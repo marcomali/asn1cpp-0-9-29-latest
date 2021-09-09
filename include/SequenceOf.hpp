@@ -40,6 +40,17 @@ namespace asn1cpp {
             return setof::adderElement(field, value);
         }
 
+        template <typename T, typename V>
+        bool adderChoice(T & field, const V & value) {
+           return setof::adderChoice(field, value);
+        }
+
+        template <typename R, typename T>
+        R getterChoice(T & field, int id) {
+           return setof::getterChoice<R>(field, id);
+        }
+
+
         template <typename T>
         bool removerElement(T & field, int id, asn_TYPE_descriptor_t * def) {
             if (id < 0 || id >= getSize(field))

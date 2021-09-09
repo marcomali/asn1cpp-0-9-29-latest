@@ -59,6 +59,51 @@ namespace asn1cpp {
             return getterField<R>(const_cast<const T*>(field), id, ok);
         }
 
+        template <typename R, typename T>
+        R getterChoice(const T& field, int id, bool *ok = nullptr) {
+            if (id < 0 || id >= getSize(field)) {
+                if (ok) *ok = false;
+                return R();
+            }
+
+            if((field.list.array)[id]==nullptr) {
+                if (ok) *ok = false;
+                return R();
+            }
+
+            return *(field.list.array)[id];
+        }
+
+        template <typename R, typename T>
+        R getterChoice(const T*& field, int id, bool *ok = nullptr) {
+            if (!field) {
+                if (ok) *ok = false;
+                return R();
+            }
+
+            if((field->list.array)[id]==nullptr) {
+                if (ok) *ok = false;
+                return R();
+            }
+
+            return *(field->list.array)[id];
+        }
+
+        template <typename R, typename T>
+        R getterChoice(T* field, int id, bool *ok = nullptr) {
+            if (!field) {
+                if (ok) *ok = false;
+                return R();
+            }
+
+            if((field->list.array)[id]==nullptr) {
+                if (ok) *ok = false;
+                return R();
+            }
+
+            return *(field->list.array)[id];
+        }
+
         // ### GETTER SEQ ###
 
         template <typename T>
@@ -161,6 +206,25 @@ namespace asn1cpp {
             return adderElement(*field, value);
         }
 
+        template <typename T, typename V>
+        bool adderChoice(T & field, const V & value) {
+            V *ptr = static_cast<V*>(calloc(1,sizeof(V)));
+
+            if(!ptr) {
+                return false;
+            }
+
+            *ptr=value;
+
+            return ASN_SET_ADD(&field, ptr) == 0;
+        }
+
+        template <typename T, typename V>
+        bool adderChoice(T *& field, const V & value) {
+            if (!field) field = static_cast<T*>(calloc(1, sizeof(T)));
+            return adderChoice(*field, value);
+        }
+
         template <typename T>
         bool removerElement(T & field, int id, asn_TYPE_descriptor_t * def) {
             if (id < 0 || id >= getSize(field))
@@ -213,6 +277,12 @@ namespace asn1cpp {
  */
 #define pushList(field, V, ...) \
     adderElement(field, V, ## __VA_ARGS__)
+
+#define pushChoice(field,V) \
+    adderChoice(field, V)
+
+#define getChoice(field,R,id) \
+    getterChoice<R>(field,id)
 
 /**
  * @def popList(field, T, id, ...)

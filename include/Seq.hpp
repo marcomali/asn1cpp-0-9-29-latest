@@ -163,6 +163,8 @@ namespace asn1cpp {
              */
             static void swap(Seq & lhs, Seq & rhs);
 
+            bool fillin(T & fillvalue);
+
         private:
             template <template <typename> class S, typename Y,
                       typename = typename std::enable_if<are_compatible_asn1_wrappers<Seq<T>, S<Y>>::value>::type>
@@ -306,10 +308,31 @@ namespace asn1cpp {
             def_ = other.getTypeDescriptor();
         }
     }
+    template <typename T>
+    bool Seq<T>::fillin(T & fillvalue) {
+        if(seq_==nullptr) {
+            return false;
+        }
+
+        // fprintf(stdout,"memcpy(%p,%p,%zd)\n",seq_,&fillvalue,sizeof(T));
+        memcpy(seq_,&fillvalue,sizeof(T));
+
+        return true;
+    }
 
     template <typename T>
     Seq<T> makeSeq(asn_TYPE_descriptor_t * def) {
         return Seq<T>(def);
+    }
+
+    template <typename T> 
+    Seq<T> makeSeqFromStructMember(asn_TYPE_descriptor_t * def,T &structmember) {
+        auto seqobj = makeSeq<T>(def);
+        if(seqobj.fillin(structmember) == false) {
+            throw std::runtime_error("Error: cannot make Sequence from struct member");
+        }
+
+        return seqobj;
     }
 }
 
@@ -336,5 +359,8 @@ namespace asn1cpp {
  */
 #define makeSeq(T) \
     makeSeq<T>(&ASN1CPP_ASN1C_DEF(T))
+
+#define makeSeqFromStructMember(T,structmember) \
+    makeSeqFromStructMember<T>(&ASN1CPP_ASN1C_DEF(T),structmember)
 
 #endif

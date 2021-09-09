@@ -215,4 +215,7 @@ namespace asn1cpp {
 #define clrField(field, T, ...) \
     clearerField(field, &ASN1CPP_ASN1C_DEF(T), ## __VA_ARGS__)
 
+#define setSeqIntoChoiceStruct(field,seq) \
+    field = *seq;
+
 #endif
