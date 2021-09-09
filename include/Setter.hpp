@@ -69,6 +69,9 @@ namespace asn1cpp {
             bool operator()(OCTET_STRING_t * field, const OCTET_STRING_t * value) {
                 return OCTET_STRING_fromBuf(field, reinterpret_cast<const char *>(value->buf), value->size) == 0;
             }
+            bool operator()(OCTET_STRING_t * field, const unsigned int value) {
+                return operator()(field, std::to_string(value));
+            }
         };
     }
 

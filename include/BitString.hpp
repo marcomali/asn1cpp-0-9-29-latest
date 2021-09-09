@@ -47,7 +47,7 @@ namespace asn1cpp {
             return true;
         }
 
-        bool setterBit(BIT_STRING_t & field, unsigned int bit_number) {
+        inline bool setterBit(BIT_STRING_t & field, unsigned int bit_number) {
         	int requiredBytes = (bit_number / 8 + 1);
 
         	if(bitstringAlloc(requiredBytes,field) == false) return false;
@@ -57,13 +57,13 @@ namespace asn1cpp {
         	return true;
         }
 
-        bool setterBit(BIT_STRING_t *& field, unsigned int bit_number) {
+        inline bool setterBit(BIT_STRING_t *& field, unsigned int bit_number) {
         	if(!field) field = static_cast<BIT_STRING_t *>(calloc(1, sizeof(BIT_STRING_t)));
         	if(!field) return false;
         	return setterBit(*field,bit_number);
         }
 
-        bool setterBit(BIT_STRING_t & field, uint8_t bytebitmask, unsigned int bytebitmask_pos) {
+        inline bool setterBit(BIT_STRING_t & field, uint8_t bytebitmask, unsigned int bytebitmask_pos) {
             if(bitstringAlloc(bytebitmask_pos+1,field) == false) return false;
 
             if(bytebitmask_pos >= field.size) {
@@ -75,18 +75,33 @@ namespace asn1cpp {
             return true;
         }
 
-        bool setterBit(BIT_STRING_t *& field, uint8_t bytebitmask, unsigned int bytebitmask_pos) {
+        inline bool setterBit(BIT_STRING_t *& field, uint8_t bytebitmask, unsigned int bytebitmask_pos) {
             if(!field) field = static_cast<BIT_STRING_t *>(calloc(1, sizeof(BIT_STRING_t)));
             if(!field) return false;
             return setterBit(*field,bytebitmask,bytebitmask_pos);
         }
 
-        bool checkerBit(BIT_STRING_t & field, unsigned int bit_number, bool * ok = nullptr) {
+        inline uint8_t getterByteMask(BIT_STRING_t & field, unsigned int byte_number, bool * ok = nullptr) {
+            if(ok) *ok=true;
+            return field.buf[byte_number];
+        }
+
+        inline uint8_t getterByteMask(BIT_STRING_t *& field, unsigned int byte_number, bool * ok = nullptr) {
+          if(!field) {
+              if(ok) *ok=false;
+              return false;
+          } else {
+              if(ok) *ok=true;
+              return field->buf[byte_number];
+          }
+        }
+
+        inline bool checkerBit(BIT_STRING_t & field, unsigned int bit_number, bool * ok = nullptr) {
             if(ok) *ok=true;
             return field.buf[bit_number / 8] & (1 << (7 - bit_number % 8));
         }
 
-        bool checkerBit(BIT_STRING_t *& field, unsigned int bit_number, bool * ok = nullptr) {
+        inline bool checkerBit(BIT_STRING_t *& field, unsigned int bit_number, bool * ok = nullptr) {
             if(!field) {
                 if(ok) *ok=false;
                 return false;
@@ -98,7 +113,7 @@ namespace asn1cpp {
             return false;
         }
 
-        bool clearerBit(BIT_STRING_t & field, unsigned int bit_number) {
+	inline bool clearerBit(BIT_STRING_t & field, unsigned int bit_number) {
 	    	if(!field.buf) return false;
 
 	    	if((bit_number / 8 + 1) > field.size) {
@@ -136,7 +151,7 @@ namespace asn1cpp {
 	    	return true;
     	}
 
-    	bool clearerBit(BIT_STRING_t *& field, unsigned int bit_number) {
+        inline bool clearerBit(BIT_STRING_t *& field, unsigned int bit_number) {
     		if(!field) return false;
     		return clearerBit(*field,bit_number);
     	}

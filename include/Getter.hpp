@@ -154,6 +154,16 @@ namespace asn1cpp {
     }
 
     template <typename T>
+    Seq<T> getterSeqOpt(const T * field, asn_TYPE_descriptor_t * def, bool * ok = nullptr) {
+        if(field==NULL && ok!=NULL) {
+            *ok=false;
+            return Seq<T>();
+        } else {
+            return getterSeq(*field,def,ok);
+        }
+    }
+
+    template <typename T>
     View<T> getterView(T & field, asn_TYPE_descriptor_t * def, bool * ok = nullptr) {
         bool iok;
         return Impl::Getter<View<T>, T>()(&field, def, ok ? *ok : iok);
@@ -207,6 +217,9 @@ namespace asn1cpp {
  */
 #define getSeq(field, R, ...) \
     getterSeq(field, &ASN1CPP_ASN1C_DEF(R), ## __VA_ARGS__)
+
+#define getSeqOpt(field, R, ...) \
+    getterSeqOpt(field, &ASN1CPP_ASN1C_DEF(R), ## __VA_ARGS__)
 
 /**
  * @def getView(field, R, ...)
